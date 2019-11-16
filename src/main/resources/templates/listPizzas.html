@@ -15,13 +15,17 @@
 <header>
     <h1>Welcome to our Pizza Delivery App</h1>
 </header>
-<main method="POST" th:object ="${pizzas}" >
+<main>
+    <form  method="POST" th:action= ="@{/*}" >
     <h2>Choose pizza:</h2>
     <div th:each="pizzas : ${pizzas}">
-    <input type="radio" name="pizzas" th:value="${pizzas}"><span th:text="${pizzas.name}">()</span> (<span th:text="${pizzas.description}"></span>)<br/>
+    <input type="radio" name="pizzas" th:value="${pizzas}">
+        <span th:text="${pizzas.name}">()</span>
+        (<span th:text="${pizzas.description}"></span>)<br/>
     </div>
     <br/>
     <a href="/selectPizzaSize.html">Submit</a>
+    </form>
 </main>
 </body>
 </html>
