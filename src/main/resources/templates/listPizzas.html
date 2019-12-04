@@ -20,7 +20,7 @@
     <h2>Choose pizza:</h2>
     <div th:each="pizzas : ${pizzas}">
     <input type="radio" name="pizzas" th:value="${pizzas}">
-        <span th:text="${pizzas.name}">()</span>
+        <span th:text="${pizzas.name}"></span>
         (<span th:text="${pizzas.description}"></span>)<br/>
     </div>
     <br/>
