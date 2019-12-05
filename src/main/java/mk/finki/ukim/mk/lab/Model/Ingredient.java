@@ -1,9 +1,9 @@
 package mk.finki.ukim.mk.lab.Model;
 
-import lombok.Data;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import java.util.List;
 @Entity
@@ -14,6 +14,7 @@ public class Ingredient {
     private boolean spicy;
     private float amount;
     private boolean veggie;
+    @ManyToMany(mappedBy = "ingredients")
     private List<Pizza> pizzas;
 
     public Ingredient(String name, boolean spicy, float amount, boolean veggie, List<Pizza> pizzas) {
@@ -29,7 +30,27 @@ public class Ingredient {
     }
 
     public void setAmount(float amount) {
-        this.amount=amount
+        this.amount=amount;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public boolean isSpicy() {
+        return spicy;
+    }
+
+    public float getAmount() {
+        return amount;
+    }
+
+    public boolean isVeggie() {
+        return veggie;
+    }
+
+    public List<Pizza> getPizzas() {
+        return pizzas;
     }
 
     public void setSpicy(boolean spicy) {
