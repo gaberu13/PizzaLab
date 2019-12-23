@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -15,26 +14,67 @@ import java.util.List;
 @Entity
 @Table(name = "pizzas")
 public class Pizza {
+
+
     @Id
     private String name;
     private String description;
-    @ManyToMany(fetch= FetchType.EAGER)
-    private List<Ingredient> ingredients;
     private boolean veggie;
+    @ManyToMany(mappedBy = "pizzas")
+    private List<Ingredient> ingredients;
 
-    public Pizza(String name, ArrayList<Ingredient> ingredients, boolean veggie) {
-        this.name=name;
-        this.ingredients=ingredients;
-        this.veggie=veggie;
+
+
+    public Pizza(String name, List<Ingredient> ingredients, Boolean veggie, String description) {
+        this.name = name;
+        this.description = description;
+        this.ingredients = ingredients;
+        this.veggie = veggie;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setIngredients(List<Ingredient> ingredients) {
+        this.ingredients = ingredients;
+    }
+
+    public boolean isVeggie() {
+        return veggie;
+    }
+
+    public void setVeggie(boolean veggie) {
+        this.veggie = veggie;
     }
 
 
-    public void addIngredients(Ingredient ingredient) {
-        this.ingredients.add(ingredient);
-        ingredient.getPizzas().add(this);
+
+
+    public int getNumIngredients()
+    {
+        return ingredients.size();
     }
+
+
 
     public List<Ingredient> getIngredients() {
         return ingredients;
+    }
+
+    public boolean getVeggie() {
+       return  veggie;
     }
 }

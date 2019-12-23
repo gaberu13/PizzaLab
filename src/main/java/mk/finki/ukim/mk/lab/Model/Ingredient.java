@@ -1,12 +1,16 @@
 package mk.finki.ukim.mk.lab.Model;
 
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
+
+import javax.persistence.*;
 import java.util.List;
 @Entity
+@Getter
+@Setter
+@Data
+
 @Table(name = "ingredients")
 public class Ingredient {
     @Id
@@ -14,8 +18,6 @@ public class Ingredient {
     private boolean spicy;
     private float amount;
     private boolean veggie;
-    @ManyToMany(mappedBy = "ingredients")
-    private List<Pizza> pizzas;
 
     public Ingredient(String name, boolean spicy, float amount, boolean veggie, List<Pizza> pizzas) {
         this.name = name;
@@ -25,40 +27,56 @@ public class Ingredient {
         this.pizzas = pizzas;
     }
 
-    public void setName(String name) {
-        this.name=name;
-    }
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.EAGER)
+    private List<Pizza> pizzas;
 
-    public void setAmount(float amount) {
-        this.amount=amount;
-    }
 
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public boolean isSpicy() {
         return spicy;
     }
 
+    public void setSpicy(boolean spicy) {
+        this.spicy = spicy;
+    }
+
     public float getAmount() {
         return amount;
+    }
+
+    public void setAmount(float amount) {
+        this.amount = amount;
     }
 
     public boolean isVeggie() {
         return veggie;
     }
 
+    public void setVeggie(boolean veggie) {
+        this.veggie = veggie;
+    }
+
     public List<Pizza> getPizzas() {
         return pizzas;
     }
 
-    public void setSpicy(boolean spicy) {
-        this.spicy=spicy;
+    public void setPizzas(List<Pizza> pizzas) {
+        this.pizzas = pizzas;
     }
 
-    public void setVeggie(boolean veggie) {
-        this.veggie=veggie;
+    public boolean getSpicy() {
+     return spicy;
+    }
+
+    public boolean getVeggie() {
+        return veggie;
     }
 }
-

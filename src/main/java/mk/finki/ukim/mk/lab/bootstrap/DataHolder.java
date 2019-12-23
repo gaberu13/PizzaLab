@@ -3,8 +3,8 @@ package mk.finki.ukim.mk.lab.bootstrap;
 import lombok.Getter;
 import mk.finki.ukim.mk.lab.Model.Ingredient;
 import mk.finki.ukim.mk.lab.Model.Pizza;
-import mk.finki.ukim.mk.lab.Repository.jpa.JpaIngredientRepository;
-import mk.finki.ukim.mk.lab.Repository.jpa.JpaPizzaRepository;
+import mk.finki.ukim.mk.lab.Repository.IngredientRepository;
+import mk.finki.ukim.mk.lab.Repository.PizzaRepository;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -17,13 +17,15 @@ import java.util.List;
 public class DataHolder {
     public static final List<Pizza> pizzas =new ArrayList<>();
     public static final List<Ingredient> ingredients =new ArrayList<>();
-    private final JpaPizzaRepository jpaPizzaRepository;
-    private final JpaIngredientRepository jpaIngredientRepository;
+    private final PizzaRepository jpaPizzaRepository;
+    private final IngredientRepository jpaIngredientRepository;
 
-    public DataHolder(JpaPizzaRepository jpaPizzaRepository, JpaIngredientRepository jpaIngredientRepository) {
+    public DataHolder(PizzaRepository jpaPizzaRepository, IngredientRepository jpaIngredientRepository) {
         this.jpaPizzaRepository = jpaPizzaRepository;
         this.jpaIngredientRepository = jpaIngredientRepository;
     }
+
+
     @PostConstruct
     public void init(){
         Ingredient tomato_sauce = new Ingredient("tomato sauce",true,100,true,new ArrayList<>());
@@ -72,10 +74,10 @@ public class DataHolder {
         ingredients.add(beef);
         ingredients.add(mascarpone);
 
-        if(this.jpaPizzaRepository.count() == 0 && this.jpaIngredientRepository.count() == 0) {
-            this.jpaPizzaRepository.saveAll(pizzas);
-            this.jpaIngredientRepository.saveAll(ingredients);
-        }
+
+//        this.jpaPizzaRepository.savePizza(pizzas)
+//           this.jpaIngredientRepository.;
+
 
     }
 }

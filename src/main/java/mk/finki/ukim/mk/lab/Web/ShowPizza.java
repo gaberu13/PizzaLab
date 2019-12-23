@@ -1,85 +1,70 @@
 package mk.finki.ukim.mk.lab.Web;
-import mk.finki.ukim.mk.lab.Exeptions.InvalidPizzaException;
+import mk.finki.ukim.mk.lab.Exeptions.NotAVeggiePizzaException;
 import mk.finki.ukim.mk.lab.Model.Ingredient;
 import mk.finki.ukim.mk.lab.Model.Pizza;
-import mk.finki.ukim.mk.lab.Services.IngredientsService;
 import mk.finki.ukim.mk.lab.Services.PizzaService;
+import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
-import javax.servlet.http.HttpServletResponse;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @RestController
-@RequestMapping("/api/pizzas")
+@CrossOrigin(origins="http://localhost:3000")
+@RequestMapping(path = "/pizzas", produces = MimeTypeUtils.APPLICATION_JSON_VALUE)
 public class ShowPizza {
-  private final PizzaService pizzaService;
-  private final IngredientsService ingredientsService;
 
-  public ShowPizza(PizzaService pizzaService, IngredientsService ingredientsService) {
-    this.pizzaService = pizzaService;
-    this.ingredientsService = ingredientsService;
-  }
+  private final PizzaService service;
 
-  @GetMapping
-  public List<Pizza> getAllPizzas(){
-    return this.pizzaService.getAllPizzas();
+  public ShowPizza(PizzaService service) {
+    this.service = service;
   }
 
   @PostMapping
-  public Pizza createPizza(@RequestParam String name,
-                           @RequestParam("ingredients") ArrayList<Ingredient> list,
-                           @RequestParam boolean veggie,
-                           HttpServletResponse response,
-                           UriComponentsBuilder builder){
-    Pizza result = new Pizza(name,list,veggie);
-    response.setHeader("Location", String.valueOf(builder.path("/api/pizzas/{id}").buildAndExpand(builder.toUriString())));
-    return result;
+  public Pizza AddPizza(@RequestParam("name") String name,
+                        @RequestParam(value = "veggie", defaultValue = "false", required = false) Boolean veggie,
+                        @RequestParam("description")String description,
+                        @RequestParam("ingredients") List<Ingredient> ingredients) throws NotAVeggiePizzaException {
+    Pizza pizza = new Pizza(name,ingredients, veggie, description);
+    return service.addPizza(pizza);
   }
 
-  @GetMapping("/{id}")
-  public Pizza getPizza(@PathVariable String name){
-    return this.pizzaService.getPizza(name).orElseThrow(InvalidPizzaException::new);
-  }
-
-  // Return pizzas that have total ingredients less than given parameter
-  @GetMapping
-  public List<Pizza> getPizzasWithIngredientsLessThan(@RequestParam int totalIngredients){
-    return this.pizzaService.getAllPizzas().stream().filter(p -> p.getIngredients().size() < totalIngredients).collect(Collectors.toList());
-  }
-
-  // Put method in background deletes the current object and creates a new one with the given parameters
   @PutMapping("/{id}")
-  public Pizza editPizza(@RequestParam String name,
-                         @RequestParam ArrayList<Ingredient> ingredients,
-                         @RequestParam boolean veggie){
-    Pizza oldPizza = this.pizzaService.getPizza(name).orElseThrow(InvalidPizzaException::new);
-    Pizza newPizza = new Pizza(name,ingredients,veggie);
-    this.pizzaService.deletePizza(oldPizza);
-    return this.pizzaService.addPizza(newPizza);
+  public Pizza EditPizza(@RequestParam("name") String name,
+                         @RequestParam("veggie")Boolean veggie,
+                         @RequestParam("description")String description
+  ) throws NotAVeggiePizzaException {
+    Pizza pizza = new Pizza(name,new ArrayList<Ingredient>(), veggie, description);
+    return service.editPizza(name,pizza);
   }
 
   @DeleteMapping("/{id}")
-  public void deletePizza(@PathVariable String name){
-    this.pizzaService.deletePizza(name);
+  public void RemovePizza(@PathVariable String id)
+  {
+    service.removePizza(id);
   }
 
-  // Return the common ingredients of two pizzas
-  @GetMapping("/compare")
-  public List<Ingredient> comparePizzasByIngredients(@RequestParam String pizzaName1,
-                                                     @RequestParam String pizzaName2){
-    List<Ingredient> commonIngredients = new ArrayList<>();
-    Pizza pizza_1 = this.pizzaService.getPizza(pizzaName1).orElseThrow(InvalidPizzaException::new);
-    Pizza pizza_2 = this.pizzaService.getPizza(pizzaName2).orElseThrow(InvalidPizzaException::new);
-    for(Ingredient ingredient : pizza_1.getIngredients()){
-      for(Ingredient ingredient1 : pizza_2.getIngredients()){
-        if(ingredient.getName().compareTo(ingredient1.getName())==0){
-          commonIngredients.add(ingredient);
-          break;
-        }
-      }
-    }
-    return commonIngredients;
+  @GetMapping("/{id}")
+  public Pizza GetPizza(@PathVariable String id)
+  {
+    return service.getPizza(id);
   }
+
+  @GetMapping()
+  public List<Pizza> GetPizzas(){
+    return service.getPizzas();
+  }
+
+  @GetMapping("/compare")
+  public List<Ingredient> CompareIngredients(@RequestParam("pizza1") String pizza1,
+                                             @RequestParam("pizza2") String pizza2){
+    return service.compareIngredients(pizza1,pizza2);
+  }
+
+  @GetMapping(params = "totalIngredients")
+  public List<Pizza> GetPizzasLessIngredients(@RequestParam("totalIngredients") int numIngredients){
+    return service.getPizzasLessIngredients(numIngredients);
+  }
+
 }

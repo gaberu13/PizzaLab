@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8">
     <title>Pizza Order page - Pizza Size</title>
@@ -32,13 +32,15 @@
     <h1>Pizza Order page - Select Pizza Size </h1>
 </header>
 <section>
-    <h2>Choose pizza size:</h2>
-    <input type="radio" name="pizza_size" value="Small"> Small <br/>
-    <input type="radio" name="pizza_size" value="Medium"> Medium <br/>
-    <input type="radio" name="pizza_size" value="Big"> Big <br/>
-    <input type="radio" name="pizza_size" value="Family"> Family <br/>
-    <br/>
-    <a href="/deliveryInfo.html">Submit</a>
+    <form th:action="@{/PizzaOrder.do}" method="GET">
+        <h2>Choose pizza size:</h2>
+        <input type="radio" name="pizza_size" value="Small"> Small <br/>
+        <input type="radio" name="pizza_size" value="Medium"> Medium <br/>
+        <input type="radio" name="pizza_size" value="Big"> Big <br/>
+        <input type="radio" name="pizza_size" value="Family"> Family <br/>
+        <br/>
+        <input type="submit" value="Submit">
+    </form>
 </section>
 <aside>
     <table>
@@ -48,7 +50,7 @@
             </th>
         </tr>
         <tr>
-            <td><b>Pizza Type </b></td>
+            <td><b><p th:text="${pizzatype}"></p></b></td>
             <td>Margarita</td>
         </tr>
     </table>

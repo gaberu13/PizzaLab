@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8">
     <title>WP lab - Delivery Info</title>
@@ -11,18 +11,15 @@
         table {
             width: 100%;
         }
-
         table, td, th {
             border: 1px solid black;
             padding: 3px 2px;
         }
-
         section {
             float: left;
             margin: 0 1.5%;
             width: 63%;
         }
-
         aside {
             float: right;
             margin: 0 1.5%;
@@ -36,12 +33,12 @@
 </header>
 <section>
 
-    <form method="" action="">
+    <form th:action="@{/ConfirmationInfo.do}" method="GET">
         <label for="clientName">Client Name:</label><br/>
         <input type="text" id="clientName" name="clientName"/><br/>
         <label for="clientAddress">Delivery Address:</label><br/>
         <textarea cols="40" rows="3" id="clientAddress" name="clientAddress"></textarea><br/>
-        <a href="/confirmationInfo.html">Submit</a>
+        <input type="submit" value="Submit">
     </form>
 
 </section>
@@ -55,11 +52,11 @@
 
         <tr>
             <td><b>Pizza Type </b></td>
-            <td>Margarita</td>
+            <td><p th:text="${order.pizzaType}"></p></td>
         </tr>
         <tr>
             <td><b>Pizza Size </b></td>
-            <td>Large</td>
+            <td><p th:text="${order.pizzaSize}"></p></td>
         </tr>
     </table>
 </aside>
