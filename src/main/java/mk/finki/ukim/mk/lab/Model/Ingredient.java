@@ -11,7 +11,7 @@ import java.util.List;
 @Setter
 @Data
 
-@Table(name = "ingredients")
+@Table(name = "Ingredients")
 public class Ingredient {
     @Id
     private String name;
@@ -27,9 +27,10 @@ public class Ingredient {
         this.pizzas = pizzas;
     }
 
-    @JsonIgnore
+
     @ManyToMany(fetch = FetchType.EAGER)
-    private List<Pizza> pizzas;
+    @JsonIgnore
+    List<Pizza> pizzas;
 
 
     public String getName() {
